@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>Connection: <span id="status" style="font-weight: bold;">N/A</span></p>
+<div>Coordinates</div>
+<br/>
+<table>
+    <th>
+    <td>Target state</td>
+    <td>Current state</td>
+    </th>
+    <tr>
+        <td>X</td>
+        <td><input type="number" id="x"></td>
+        <td><input type="number" id="x_c" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td>Y</td>
+        <td><input type="number" id="y"></td>
+        <td><input type="number" id="y_c" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td>Z</td>
+        <td><input type="number" id="z"></td>
+        <td><input type="number" id="z_c" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td>Alpha</td>
+        <td><input type="number" id="alpha"></td>
+        <td><input type="number" id="alpha_c" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td>Betta</td>
+        <td><input type="number" id="betta"></td>
+        <td><input type="number" id="betta_c" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td>Velocity</td>
+        <td><input type="number" id="vel"></td>
+    </tr>
+</table>
+<br>
+<div>
+    is moving <span id="is_moving"></span>
+</div>
+<br>
+<button id="send_coords">MOVE</button>
+<br>
+<script type="text/javascript" src="lib/roslib.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    const ros = new ROSLIB.Ros({url: "ws://localhost:9999"})
+
+    const my_topic_sender = new ROSLIB.Topic({
+        ros,
+        name: "move_to_coordinates",
+        messageType: "geometry_msgs/Accel",
+    })
+
+    const my_topic_listener = new ROSLIB.Topic({
+        ros,
+        name: "publish_state",
+        messageType: "geometry_msgs/Accel",
+    })
+
+    ros.on("connection", () => {
+        document.getElementById("status").innerHTML = "success"
+    })
+
+    ros.on("error", (error) => {
+        document.getElementById("status").innerHTML = `errored out (${error})`
+    })
+
+    my_topic_listener.subscribe((message) => {
+        document.getElementById('x_c').value = message.linear.x
+        document.getElementById('y_c').value = message.linear.y
+        document.getElementById('z_c').value = message.linear.z
+        document.getElementById('alpha_c').value = message.angular.x
+        document.getElementById('betta_c').value = message.angular.y
+    });
+
+    document.getElementById('send_coords').onclick = function () {
+        my_topic_sender.publish(
+            new ROSLIB.Message({
+                linear: {
+                    x: parseInt(document.getElementById('x').value),
+                    y: parseInt(document.getElementById('y').value),
+                    z: parseInt(document.getElementById('z').value)
+                },
+                angular: {
+                    x: parseInt(document.getElementById('alpha').value),
+                    y: parseInt(document.getElementById('betta').value),
+                    z: parseInt(document.getElementById('vel').value)
+                }
+            })
+        )
+    }
+</script>
+</body>
+</html>

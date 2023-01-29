@@ -1,0 +1,4 @@
+geometry_msgs/Point coordinates
+float32 alpha_angle
+float32 betta_angle
+float32 velocity
