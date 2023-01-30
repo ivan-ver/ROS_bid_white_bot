@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="controller" exec="router" />
+</launch>
