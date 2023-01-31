@@ -13,6 +13,7 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TargetInfo.msg"
   "msg/CurrentState.msg"
+  "action/InverseKinematic.action"
   DEPENDENCIES geometry_msgs
 )
 

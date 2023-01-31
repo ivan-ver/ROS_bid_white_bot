@@ -22,6 +22,7 @@ setup(
     entry_points={
         'console_scripts': [
             "router = controller.router:main",
+            "inverse_kinematic_action = controller.inverse_kinematic_action:main",
         ],
     },
 )

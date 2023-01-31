@@ -1,0 +1,6 @@
+geometry_msgs/Point start
+geometry_msgs/Point finish
+---
+float64[] result
+---
+float64[] angles
